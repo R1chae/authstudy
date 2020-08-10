@@ -1,1 +1,2 @@
-# authstudy
+#README
+very readable (hopefully)
