@@ -6,6 +6,7 @@
 package com.authstudy.authstudy;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,13 +19,14 @@ public class API {
  
     @GetMapping("/GetUserInformation")
     public String getUserInfoController() {
-        Core.User user = new Core.User("admin", "admin", "admin@admin.com", 4);
+        Core.User user = Core.User.getCurrentUser();
         return ("E-Mail: " + user.getEmail() + "</br>" + "Username: " + user.getUsername() + "</br>" + "Password: " + user.getPassword());
     }
     
     @PostMapping("/RegisterNewUser")
-    public String postUserInfoController() {
-        return "not implemented";
+    public String postUserInfoController(String email, String name, String password, int age) { 
+        Core.User registeredUser = new Core.User(name, password, email, age);
+        return email + " registered as " + name + " with password " + password + " aged " + age;
     }
     
     @PostMapping("/UserAuthentication")
