@@ -5,11 +5,17 @@
  */
 package Core;
 
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  *
  * @author RichardDumser
  */
-public class User {
+public class User implements Serializable {
+
     private String username;
     private String password;
     private String email;
@@ -31,12 +37,14 @@ public class User {
         return age;
     }
 
-    public User(String username, String password, String email, int age) {
+    public static User currentUser(String username, String password, String email, int age) {
+        return new User(username, password, email, age);
+    }
+
+    private User(String username, String password, String email, int age) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.age = age;
     }
-    
-    
 }
