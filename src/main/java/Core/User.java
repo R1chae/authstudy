@@ -5,7 +5,6 @@
  */
 package Core;
 
-
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,16 +14,12 @@ import javax.persistence.Table;
  *
  * @author RichardDumser
  */
-@Entity
-@Table(name="users")
 public class User implements Serializable {
-    @Id
+
     private String username;
     private String password;
     private String email;
     private int age;
-    
-    private static User currentUser = new User();
 
     public String getUsername() {
         return username;
@@ -42,15 +37,14 @@ public class User implements Serializable {
         return age;
     }
 
-    public static void currentUser(String username, String password, String email, int age) {
-        currentUser.username = username;
-        currentUser.password = password;
-        currentUser.email = email;
-        currentUser.age = age;
+    public static User currentUser(String username, String password, String email, int age) {
+        return new User(username, password, email, age);
     }
 
-    public static User getCurrentUser() {
-        return currentUser;
+    private User(String username, String password, String email, int age) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.age = age;
     }
-
 }

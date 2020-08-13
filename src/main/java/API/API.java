@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 /**
  *
@@ -20,34 +17,29 @@ import javax.persistence.Persistence;
  */
 @RestController
 public class API {
- 
-    //private static final String PERSISTENCE_UNIT_NAME = "users";
-    //private static EntityManagerFactory factory;
-    
+
+    private static Core.User currentUser;
+
     @GetMapping("/GetUserInformation")
-    public String getUserInfoController() {
-        
-        
-        Core.User user = Core.User.getCurrentUser();
-        
-        return ("E-Mail: " + user.getEmail() + " </br> Username: " + user.getUsername() + " </br> Password: " + user.getPassword() + " </br> age: " + user.getAge());
+    @ResponseStatus(HttpStatus.OK)
+    public Core.User getUserInfoController() {
+        return (currentUser);
     }
-    
+
     @PostMapping("/RegisterNewUser")
-    public String postUserInfoController(String email, String username, String password, int age) { 
-        
-        //factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-        //EntityManager em = factory.createEntityManager();
-        
-        Core.User.currentUser(username, password, email, age);
-        //em.persist(Core.User.getCurrentUser());
-        return email + " registered as " + username + " with password " + password + " aged " + age;
+    @ResponseStatus(HttpStatus.CREATED)
+    public String postUserInfoController(String email, String username, String password, int age) {
+        currentUser = Core.User.currentUser(username, password, email, age);
+        StringBuilder registrationmsg = new StringBuilder(email);               //I could just return it as json, but for learning purposes I'll leave it with this string using StringBuilder
+        registrationmsg.append(" registered as ").append(username);
+        registrationmsg.append(" with password ").append(password);
+        registrationmsg.append(" aged ").append(age);
+        return registrationmsg.toString();
     }
-    
+
     @PostMapping("/UserAuthentication")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.CREATED)
     public String postLoginController(String username, String password) {
-        
         return "not implemented yet";
     }
 }
