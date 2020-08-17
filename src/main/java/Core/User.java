@@ -6,14 +6,13 @@
 package Core;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author RichardDumser
  */
+@Component
 public class User implements Serializable {
 
     private String username;

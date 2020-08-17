@@ -10,25 +10,29 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.springframework.stereotype.Component;
 
 
 /**
  *
  * @author RichardDumser
  */
-public class Infrastructure {
-    private static final String DBPATH = "jdbc:derby:src\\main\\java\\Infrastructure\\authstudyDB;create=true";
-    private static final String DBUSERNAME = "root";
-    private static final String DBPASSWORD = "";
-    private static Connection con;
+@Component
+class Infrastructure implements IInfrastructure {
+    private final String DBPATH = "jdbc:derby:src\\main\\java\\Infrastructure\\authstudyDB;create=true";
+    private final String DBUSERNAME = "root";
+    private final String DBPASSWORD = "";
+    private Connection con;
     
-    public static void connect() throws SQLException{
+    @Override
+    public void connect() throws SQLException{
         if(con == null){
             con = DriverManager.getConnection(DBPATH, DBUSERNAME, DBPASSWORD);
         }
     }
     
-    public static void register(String username, String password, String email, int age) throws SQLException{
+    @Override
+    public void register(String username, String password, String email, int age) throws SQLException{
         connect();
         Statement statement = con.createStatement();                            //TABLE user: (username varchar(64), password varchar(128), email varchar(128), age int, PRIMARY KEY(username)
         StringBuilder sb = new StringBuilder("INSERT INTO users VALUES ('");
@@ -39,7 +43,8 @@ public class Infrastructure {
         statement.executeUpdate(sb.toString());
     }
     
-    public static Core.User login(String username, String password) throws SQLException{
+    @Override
+    public Core.User login(String username, String password) throws SQLException{
         connect();
         Statement statement = con.createStatement();
         ResultSet rs = statement.executeQuery("SELECT * FROM users");

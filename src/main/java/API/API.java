@@ -5,11 +5,10 @@
  */
 package API;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class API {
 
     private static Core.User currentUser;
-
+    ApplicationContext context = new AnnotationConfigApplicationContext(Infrastructure.Mapping.class);
+    private Infrastructure.IInfrastructure infra = (Infrastructure.IInfrastructure) context.getBean("infraBean");
+    
     @GetMapping("/GetUserInformation")
     @ResponseStatus(HttpStatus.OK)
     public Core.User getUserInfoController() {
@@ -36,7 +37,7 @@ public class API {
     public String postUserInfoController(String email, String username, String password, int age) {
         
         try{
-            Infrastructure.Infrastructure.register(username, password, email, age);
+            infra.register(username, password, email, age);
             
             currentUser = Core.User.currentUser(username, password, email, age);
             
@@ -55,7 +56,7 @@ public class API {
     @ResponseStatus(HttpStatus.CREATED)
     public String postLoginController(String username, String password) {
         try{
-            currentUser = Infrastructure.Infrastructure.login(username, password);//using the currentUser for this means that if someone is logged in already, they get logged out if they enter invalid credentials, BUT I don't have to make another User object
+            currentUser = infra.login(username, password);//using the currentUser for this means that if someone is logged in already, they get logged out if they enter invalid credentials, BUT I don't have to make another User object
             if(currentUser == null){
                 return "invalid credentials";
             } else {
