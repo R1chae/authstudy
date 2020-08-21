@@ -5,6 +5,7 @@
  */
 package Infrastructure;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -15,4 +16,5 @@ public interface IInfrastructure {
     public void connect() throws SQLException;
     public void register(String username, String password, String email, int age) throws SQLException;
     public Core.User login(String username, String password) throws SQLException;
+    public void setCon(Connection con);                                         //for testing purposes
 }

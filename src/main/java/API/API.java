@@ -5,8 +5,8 @@
  */
 package API;
 
+import Infrastructure.IInfrastructure;
 import java.sql.SQLException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -25,6 +25,18 @@ public class API {
     private static Core.User currentUser;
     ApplicationContext context = new AnnotationConfigApplicationContext(Infrastructure.Mapping.class);
     private Infrastructure.IInfrastructure infra = (Infrastructure.IInfrastructure) context.getBean("infraBean");
+
+    public API() {
+    }
+    
+    public API(IInfrastructure infra) {
+        this.infra = infra;
+    }
+    
+    public API(IInfrastructure infra, Core.User user) {
+        this.infra = infra;
+        this.currentUser = user;
+    }
     
     @GetMapping("/GetUserInformation")
     @ResponseStatus(HttpStatus.OK)
@@ -57,7 +69,7 @@ public class API {
     public String postLoginController(String username, String password) {
         try{
             currentUser = infra.login(username, password);//using the currentUser for this means that if someone is logged in already, they get logged out if they enter invalid credentials, BUT I don't have to make another User object
-            if(currentUser == null){
+            if(currentUser.equals(null)){
                 return "invalid credentials";
             } else {
                 return "logged in as: " + currentUser.getUsername();            //should I use StringBuilder even for this?

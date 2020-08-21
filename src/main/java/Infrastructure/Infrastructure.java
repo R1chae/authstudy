@@ -55,4 +55,8 @@ class Infrastructure implements IInfrastructure {
         }
         return null;
     }
+
+    public void setCon(Connection con) {                                        //for testing purposes
+        this.con = con;
+    }
 }

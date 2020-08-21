@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @author RichardDumser
  */
 @Component
-public class User implements Serializable {
+public class User implements Serializable{
 
     private String username;
     private String password;
@@ -45,5 +45,16 @@ public class User implements Serializable {
         this.password = password;
         this.email = email;
         this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("User{");
+        sb.append("username=").append(username);
+        sb.append(", password=").append(password);
+        sb.append(", email=").append(email);
+        sb.append(", age=").append(age);
+        sb.append('}');
+        return sb.toString();
     }
 }
