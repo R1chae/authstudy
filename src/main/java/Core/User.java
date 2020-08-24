@@ -6,6 +6,7 @@
 package Core;
 
 import java.io.Serializable;
+import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class User implements Serializable{
 
+    private UUID id;                                                            //adjust methods to use uuid, also database, and tests
     private String username;
     private String password;
     private String email;
@@ -36,7 +38,26 @@ public class User implements Serializable{
         return age;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+    
     public static User currentUser(String username, String password, String email, int age) {
+        
+        if(age < 18){
+            throw new IllegalArgumentException("age must be 18 or higher");
+        } else if(username.length() < 4){
+            throw new IllegalArgumentException("username must be 4 characters or longer");
+        } else if(password.length() < 8){
+            throw new IllegalArgumentException("password must be 8 characters or longer");
+        } else if(!email.contains("@")){
+            throw new IllegalArgumentException("email must contain @");
+        }
+        
         return new User(username, password, email, age);
     }
 
@@ -45,6 +66,7 @@ public class User implements Serializable{
         this.password = password;
         this.email = email;
         this.age = age;
+        this.id = UUID.randomUUID();
     }
 
     @Override

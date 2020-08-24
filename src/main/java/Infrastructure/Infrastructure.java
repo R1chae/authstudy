@@ -25,22 +25,35 @@ class Infrastructure implements IInfrastructure {
     private Connection con;
     
     @Override
-    public void connect() throws SQLException{
-        if(con == null){
-            con = DriverManager.getConnection(DBPATH, DBUSERNAME, DBPASSWORD);
+    public void connect() throws DBConnectionFailedException{
+        try{
+            if(con == null){
+                con = DriverManager.getConnection(DBPATH, DBUSERNAME, DBPASSWORD);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+            throw new DBConnectionFailedException();
         }
     }
     
     @Override
-    public void register(String username, String password, String email, int age) throws SQLException{
-        connect();
-        Statement statement = con.createStatement();                            //TABLE user: (username varchar(64), password varchar(128), email varchar(128), age int, PRIMARY KEY(username)
-        StringBuilder sb = new StringBuilder("INSERT INTO users VALUES ('");
-        sb.append(username).append("', '");
-        sb.append(password).append("', '");
-        sb.append(email).append("', ");
-        sb.append(age).append(")");
-        statement.executeUpdate(sb.toString());
+    public void register(Core.User user) throws RegistrationFailedException{
+        try{
+            connect();
+            Statement statement = con.createStatement();                        //TABLE user: (username varchar(64), password varchar(128), email varchar(128), age int, PRIMARY KEY(username)
+            String shortUUID = user.getId().toString().replaceAll("-", "");
+            StringBuilder sb = new StringBuilder("INSERT INTO users VALUES ('");
+            sb.append(user.getUsername()).append("', '");
+            sb.append(user.getPassword()).append("', '");
+            sb.append(user.getEmail()).append("', ");
+            sb.append(user.getAge()).append(", '");
+            sb.append(shortUUID).append("')");
+            statement.executeUpdate(sb.toString());
+        } catch (SQLException e){
+            e.printStackTrace();
+            throw new RegistrationFailedException();
+        }
+        
     }
     
     @Override

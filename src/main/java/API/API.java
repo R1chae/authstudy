@@ -6,7 +6,9 @@
 package API;
 
 import Infrastructure.IInfrastructure;
+import Infrastructure.RegistrationFailedException;
 import java.sql.SQLException;
+import java.util.UUID;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -46,22 +48,33 @@ public class API {
 
     @PostMapping("/RegisterNewUser")
     @ResponseStatus(HttpStatus.CREATED)
-    public String postUserInfoController(String email, String username, String password, int age) {
+    public UUID postUserInfoController(String email, String username, String password, int age) {
         
-        try{
-            infra.register(username, password, email, age);
-            
+        try {
             currentUser = Core.User.currentUser(username, password, email, age);
-            
-            StringBuilder registrationmsg = new StringBuilder(email);           //I could just return it as json, but for learning purposes I'll leave it with this string using StringBuilder
-            registrationmsg.append(" registered as ").append(username);
-            registrationmsg.append(" with password ").append(password);
-            registrationmsg.append(" aged ").append(age);
-            return registrationmsg.toString();
-        } catch(SQLException e){
-            e.printStackTrace();
-            return("Database call failed");
+            infra.register(currentUser);
+            return currentUser.getId();
+        } catch (RegistrationFailedException ex) {
+            ex.printStackTrace();
+            return null;
+        }  
+    }
+    
+    @GetMapping("/RegisterNewUser")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UUID postUserInfoController(String email, String username, String password, int age, UUID uuid) throws RegistrationFailedException {
+        
+        try {
+            currentUser = Core.User.currentUser(username, password, email, age);
+            currentUser.setId(uuid);
+            infra.register(currentUser);
+        } catch (RegistrationFailedException ex) {
+            ex.printStackTrace();
         }
+        /*if(1==1){
+            throw new RegistrationFailedException();
+        }*/
+        return currentUser.getId();
     }
 
     @PostMapping("/UserAuthentication")

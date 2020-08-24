@@ -27,9 +27,9 @@ public class UserTest extends TestCase {
     @Test
     void testCurrentUserFactoryAndToStringMethod(){
         String username = "user";
-        String password = "pass";
-        String email = "mail";
-        int age = 0;
+        String password = "password";
+        String email = "mail@mail.com";
+        int age = 18;
         
         StringBuilder sb = new StringBuilder("User{username=");
         sb.append(username);

@@ -8,10 +8,11 @@ package com.authstudy.API;
 import API.API;
 import Core.User;
 import Infrastructure.IInfrastructure;
-import java.sql.SQLException;
+import Infrastructure.RegistrationFailedException;
+import java.util.UUID;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -42,25 +43,29 @@ public class APITest extends TestCase {
     private IInfrastructure infra;
 
     @Test
-    void testLoginAndGetUserMethod() throws Exception {
+    void testLoginMethod() throws Exception {
         User fakeUser = mock(User.class);
         API api = spy(new API(infra));
+        
         when(infra.login(anyString(), anyString())).thenReturn(fakeUser);
-        api.postLoginController("", "");
+        String result = api.postLoginController("", "");
         verify(infra).login(anyString(), anyString());
-
-        User result = api.getUserInfoController();
-        assertEquals(fakeUser, result);
+        
+        assertEquals("logged in as: " + fakeUser.getUsername(), result);
     }
 
     @Test
-    void testRegistrationMethod() throws SQLException {
+    void testRegistrationMethod(){
         API spy = spy(new API(infra));
-        doNothing().when(infra).register(anyString(), anyString(), anyString(), anyInt());
-        spy.postUserInfoController("","","",0);
-        
-        User result = spy.getUserInfoController();
-        assertEquals("User{username=, password=, email=, age=0}", result.toString());
+        UUID uuid = UUID.randomUUID();
+        UUID result = null;
+        try{
+            doNothing().when(infra).register(any());
+            result = spy.postUserInfoController("@","user","password",18,uuid);
+        } catch (RegistrationFailedException e){
+            System.out.println("Registration failed");
+        }
+        assertEquals(uuid, result);
     }
     
     @Test

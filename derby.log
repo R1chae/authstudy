@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Fri Aug 21 11:25:39 CEST 2020:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.3.0 - (1405108): instance a816c00e-0174-1056-8371-000000bdc900 
+Mon Aug 24 15:48:17 CEST 2020:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.3.0 - (1405108): instance a816c00e-0174-20ba-0910-0000012cde00 
 on database directory C:\Users\RichardDumser\Documents\authstudy\src\main\java\Infrastructure\authstudyDB  with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@c387f44 
 Loaded from file:/C:/Users/RichardDumser/.m2/repository/org/apache/derby/derby/10.8.3.0/derby-10.8.3.0.jar
 java.vendor=Oracle Corporation
